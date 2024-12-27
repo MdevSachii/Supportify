@@ -3,9 +3,11 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite --host"
+        "dev": "vite --host",
+        "format": "npx prettier --write './**/*.{css,js,html,blade.php}' && ./vendor/bin/pint -v"
     },
     "devDependencies": {
+        "@shufo/prettier-plugin-blade": "^1.15.1",
         "@tailwindcss/forms": "^0.5.2",
         "alpinejs": "^3.4.2",
         "autoprefixer": "^10.4.20",
@@ -13,6 +15,7 @@
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.0",
         "postcss": "^8.4.49",
+        "prettier": "^3.3.3",
         "tailwindcss": "^3.4.17",
         "vite": "^5.0"
     }
