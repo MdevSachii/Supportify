@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\User;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class CreateAgent extends Command
 {
     protected $signature = 'agent:create';
+
     protected $description = 'Create a new agent in the system';
 
     public function handle()
@@ -34,6 +35,7 @@ class CreateAgent extends Command
             foreach ($validator->errors()->all() as $error) {
                 $this->error($error);
             }
+
             return 1;
         }
 
@@ -43,6 +45,6 @@ class CreateAgent extends Command
             'password' => Hash::make($password),
         ]);
 
-        $this->info('Agent created successfully: ' . $user->name);
+        $this->info('Agent created successfully: '.$user->name);
     }
 }

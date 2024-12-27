@@ -4,7 +4,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h1 class="text-3xl font-bold underline">
-                        Wellcome app! 
+                        Wellcome app!
                     </h1>
                 </div>
             </div>
