@@ -1,0 +1,55 @@
+name: 'docker'
+services:
+ mysql:
+  image: mysql:8.0.33
+  environment:
+   - MYSQL_ROOT_PASSWORD=root
+  ports:
+   - 3307:3306
+  volumes:
+   - ./vols/mysql/data/:/var/lib/mysql/
+  user: 1000:1000
+ phpmyadmin:
+  image: phpmyadmin/phpmyadmin
+  environment:
+   - PMA_HOST=mysql
+   - PMA_USER=root 
+   - PMA_PASSWORD=root
+  ports:
+    - 8001:80  
+ mailhog:
+  image: mailhog/mailhog:v1.0.1
+  platform: linux/amd64
+  ports:
+   - 1025:1025
+   - 8025:8025
+ app:
+  image: app
+  build:
+   context: .
+   dockerfile: ./Dockerfiles/app.Dockerfile
+   args:
+    UID: $UID
+  ports:
+    - 5173:5173
+  volumes:
+   - ./:/var/www/html/
+   - ./vols/app/docker-user-home/:/home/www-data/
+  env_file:
+   - ./.env
+ static:
+  image: nginx:1.24.0-alpine3.17
+  volumes:
+   - ./public/:/usr/share/nginx/html/
+ proxy:
+  image: proxy
+  build:
+   context: .
+   dockerfile: ./Dockerfiles/proxy.Dockerfile
+  ports:
+   - 8000:80
+  environment:
+   - PHP_FPM_HOST=app
+   - PUBLIC_PATH=public
+   - STATIC_CONTENT_HOST=static
+
