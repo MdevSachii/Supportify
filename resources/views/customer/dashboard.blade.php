@@ -4,72 +4,43 @@
             <div class="bg-white h- overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex flex-wrap justify-center gap-2">
-                        <form class="flex items-center w-full sm:max-w-sm">
+                        <div class="flex items-center w-full sm:max-w-sm">
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                     <i class="fa-solid fa-ticket"></i>
                                 </div>
-                                <input type="text" id="simple-search"
+                                <input x-model="seachTicketRef" @keyup.enter="searchTicket()" type="text"
+                                    id="simple-search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
-                                    placeholder="Search branch name..." required />
+                                    placeholder="Search by Ticket Reference..." required />
                             </div>
-                            <button type="submit"
+                            <button @Click="searchTicket()" type="submit"
                                 class="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                                 <span class="sr-only">Search</span>
                             </button>
-                        </form>
+                        </div>
                         <button @Click="isModelOpen=true"
                             class="p-2.5 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">Add
                             Enquiry
                         </button>
                     </div>
 
-                    <div class="flex justify-center mt-5">
-                        <div class="max-w-md px-6 py-6 text-sm text-red-800 rounded-lg bg-red-50">
-                            <span class="font-medium">Dark alert!</span> Change a few things up and try submitting
-                            again.
-                        </div>
-                    </div>
-
-                    <div class="mt-10 flex justify-center">
-                        <div
-                            class="relative max-w-md px-6 py-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
-                            <span
-                                class="absolute -top-2 -end-2 bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Pending</span>
-                            <div>
-                                <div class="flex justify-between">
-                                    <p class="font-normal text-xs text-gray-500">#123456789</p>
-                                    <p class="font-normal text-xs text-gray-500">22:18 27/12/2024</p>
-                                </div>
-
-                                <h5 class="mt-2 text-2xl font-bold tracking-tight text-gray-900">Shehara Thrimavithana
-                                </h5>
-                                <p class="font-normal text-xs text-gray-500">work.thrima@gmail.com</p>
-
-                                <p class="mt-2 font-normal text-gray-700">Here are the biggest enterprise
-                                    technology acquisitions of 2021 so far, in reverse chronological order.</p>
-                            </div>
-
-                            <div class="relative mt-5 p-4 border border-gray-300 rounded-lg bg-gray-50">
-                                <div class="absolute -top-2 -start-2">
-                                    <i class="fa-brands fa-rocketchat"></i>
-                                </div>
-
-                                <div class="flex justify-between">
-                                    <h3 class="text-lg font-medium text-gray-800">Sachini
-                                        Wijesinghe</h3>
-                                    <p class="font-normal text-xs text-gray-500 self-center">22:18 27/12/2024</p>
-                                </div>
-                                <div class="mt-2 mb-4 text-sm text-gray-800">
-                                    More info about this info dark goes here. This example text is going to run a bit
-                                    longer so that you can see how spacing within an alert works with this kind of
-                                    content.
-                                </div>
+                    <template x-if="isOpenNoTicketAlert">
+                        <div class="flex justify-center mt-5">
+                            <div class="max-w-md px-6 py-6 text-sm text-red-800 rounded-lg bg-red-50">
+                                <span class="font-medium">Dark alert!</span> Change a few things up and try submitting
+                                again.
                             </div>
                         </div>
-                    </div>
+                    </template>
+
+                    <template x-if="isOpenTicket">
+                        <div x-data="{ ticket_id: selectedTicketId }">
+                            <x-ticket-view />
+                        </div>
+                    </template>
 
                 </div>
             </div>
@@ -156,8 +127,7 @@
                                         <span>Phone No.</span> <br />
                                         <span>References No.</span>
                                     </div>
-                                    <div id="contact-details"
-                                        class="space-y-2 text-gray-900 font-medium leading-loose">
+                                    <div id="contact-details" class="space-y-2 text-gray-900 font-medium leading-loose">
                                         <span x-text="clipBoard.customer.name"></span> <br />
                                         <span x-text="clipBoard.customer.email">name@flowbite.com</span> <br />
                                         <span x-text="clipBoard.customer.phone_number"></span> <br />
@@ -186,13 +156,18 @@
                 return {
                     isModelOpen: false,
                     isOpenClipBoard: false,
+                    isOpenNoTicketAlert: false,
+                    isOpenTicket: false,
                     name: 'Shehara',
                     email: 'shehara@gmail.com',
                     contactNumber: '0767199756',
                     description: 'aaaaaaaaaaaaaa',
                     ticketRef: '',
+                    seachTicketRef: '',
                     clipBoard: {},
                     createTicketRoute: "{{ route('ticket.create') }}",
+                    findTickerRoute: "{{ route('ticket.find', ['ref_no' => ':id']) }}",
+                    ticketId: '',
 
                     submitNewTicket() {
                         if (this.validateForm()) {
@@ -226,6 +201,26 @@
                         } else {
                             const errorData = await response.json();
                             window.toastr.error(errorData.error || 'Ticket Creation Faild');
+                        }
+                    },
+
+                    async searchTicket() {
+                        const url = (this.findTickerRoute).replace(':id', this.seachTicketRef);
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                            }
+                        });
+
+                        if (response.ok) {
+                            this.isOpenNoTicketAlert = false;
+                            const data = await response.json();
+                            this.selectedTicketId = data.ticket_id;
+                            this.isOpenTicket = true;
+                        } else {
+                            this.isOpenNoTicketAlert = true;
                         }
                     },
 

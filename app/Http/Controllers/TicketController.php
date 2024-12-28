@@ -183,4 +183,15 @@ class TicketController extends Controller
             return response()->json(null, 500);
         }
     }
+
+    public function findByRefNo($refNo)
+    {
+        $ticket = Ticket::where('reference_number', $refNo)->first();
+
+        if (! $ticket) {
+            return response()->json(null, 404);
+        }
+
+        return response()->json(['ticket_id' => $ticket->id], 200);
+    }
 }

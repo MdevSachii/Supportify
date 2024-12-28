@@ -74,7 +74,14 @@
 
         <template x-if="isOpenTicket">
             <div x-data="{ ticket_id: selectedTicketId }">
-                <x-ticket-view />
+                <div class="flex min-h-full items-center justify-center p-4 text-center">
+                    <div class="fixed inset-0 bg-gray-500/75 transition-opacity"></div>
+                    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                            <x-ticket-view />
+                        </div>
+                    </div>
+                </div>
             </div>
         </template>
 
@@ -89,7 +96,6 @@
                     selectedTicketId: '',
                     isShowNoTickets: false,
                     allTicketsRoute: "{{ route('ticket.all') }}",
-                    getTicketRoute: "{{ route('ticket.get', ['id' => ':id']) }}",
                     changeStatusRoute: "{{ route('ticket.open', ['id' => ':id']) }}",
 
                     init() {

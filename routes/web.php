@@ -13,6 +13,7 @@ Route::prefix('ticket')->group(function () {
     Route::get('get/{id}', [TicketController::class, 'get'])->name('ticket.get');
     Route::put('open/{id}', [TicketController::class, 'open'])->name('ticket.open');
     Route::post('open', [TicketController::class, 'reply'])->name('ticket.reply');
+    Route::get('find/{ref_no}', [TicketController::class, 'findByRefNo'])->name('ticket.find');
 });
 
 Route::middleware(['auth', 'verified'])->prefix('agent')->group(function () {
