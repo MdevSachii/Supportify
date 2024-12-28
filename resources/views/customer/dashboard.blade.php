@@ -220,6 +220,7 @@
                             this.selectedTicketId = data.ticket_id;
                             this.isOpenTicket = true;
                         } else {
+                            this.isOpenTicket = false;
                             this.isOpenNoTicketAlert = true;
                         }
                     },
