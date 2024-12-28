@@ -30,8 +30,7 @@
                     <template x-if="isOpenNoTicketAlert">
                         <div class="flex justify-center mt-5">
                             <div class="max-w-md px-6 py-6 text-sm text-red-800 rounded-lg bg-red-50">
-                                <span class="font-medium">Dark alert!</span> Change a few things up and try submitting
-                                again.
+                                <span class="font-medium">No Tickets!</span> These referance number han no ticket.
                             </div>
                         </div>
                     </template>
@@ -158,10 +157,10 @@
                     isOpenClipBoard: false,
                     isOpenNoTicketAlert: false,
                     isOpenTicket: false,
-                    name: 'Shehara',
-                    email: 'shehara@gmail.com',
-                    contactNumber: '0767199756',
-                    description: 'aaaaaaaaaaaaaa',
+                    name: '',
+                    email: '',
+                    contactNumber: '',
+                    description: '',
                     ticketRef: '',
                     seachTicketRef: '',
                     clipBoard: {},
