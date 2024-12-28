@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\TicketStatus;
 use App\Models\Customer;
 use App\Models\Ticket;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class TicketController extends Controller
 {
-    public function create(Request $request)
+    public function create(Request $request, EmailService $emailService)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -49,6 +50,8 @@ class TicketController extends Controller
             DB::commit();
 
             $ticket->load('customer');
+
+            $emailService->opentTicket($ticket);
 
             return response()->json(['ticket' => $ticket], 200);
         } catch (\Exception $e) {
@@ -155,7 +158,7 @@ class TicketController extends Controller
         return response()->json(null, 200);
     }
 
-    public function reply(Request $request)
+    public function reply(Request $request, EmailService $emailService)
     {
         $validated = $request->validate([
             'ticket_id' => 'required|exists:tickets,id',
@@ -174,6 +177,8 @@ class TicketController extends Controller
             ]);
 
             DB::commit();
+
+            $emailService->replyToTicket($ticket);
 
             return response()->json(null, 201);
         } catch (\Exception $e) {
