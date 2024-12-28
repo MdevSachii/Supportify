@@ -9,6 +9,7 @@ Route::get('/', [CustomerController::class, 'index'])->name('customer');
 
 Route::prefix('ticket')->group(function () {
     Route::post('create', [TicketController::class, 'create'])->name('ticket.create');
+    Route::get('all', [TicketController::class, 'all'])->name('ticket.all');
 });
 
 Route::middleware(['auth', 'verified'])->prefix('agent')->group(function () {

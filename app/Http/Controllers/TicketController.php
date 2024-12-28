@@ -65,4 +65,20 @@ class TicketController extends Controller
 
         return strtoupper($uniqueId);
     }
+
+    public function all(Request $request)
+    {
+        $query = Ticket::with('customer');
+
+        if ($request->has('customer')) {
+            $customer = $request->input('customer');
+            $query->whereHas('customer', function ($q) use ($customer) {
+                $q->where('name', 'like', "%{$customer}%");
+            });
+        }
+
+        $tickets = $query->paginate();
+
+        return response()->json($tickets);
+    }
 }
