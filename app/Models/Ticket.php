@@ -15,4 +15,9 @@ class Ticket extends Model
     {
         return $this->hasMany(Reply::class, 'ticket_id');
     }
+
+    public function latestReply()
+    {
+        return $this->hasOne(Reply::class, 'ticket_id')->latest();
+    }
 }

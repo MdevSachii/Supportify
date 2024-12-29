@@ -24,6 +24,7 @@ class EmailService
         $messageContent = [
             'title' => 'Received Ticket Reply',
             'body' => "The Support Agent has replied to your ticket. Please check the reply using this reference number: {$ticket->reference_number}",
+            'reply' => $ticket->latestReply->message,
         ];
 
         dispatch(new SendEmailJob($emailAddress, $messageContent));
