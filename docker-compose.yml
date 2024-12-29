@@ -16,7 +16,7 @@ services:
    - PMA_USER=root 
    - PMA_PASSWORD=root
   ports:
-    - 8001:80  
+    - $PHP_MYADMIN_PORT:80  
  mailhog:
   image: mailhog/mailhog:v1.0.1
   platform: linux/amd64
@@ -47,7 +47,7 @@ services:
    context: .
    dockerfile: ./Dockerfiles/proxy.Dockerfile
   ports:
-   - 8000:80
+   - $APP_PORT:80
   environment:
    - PHP_FPM_HOST=app
    - PUBLIC_PATH=public

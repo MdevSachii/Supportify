@@ -38,10 +38,15 @@ cp .env.example .env
 
 ### Set your `.env` values in the `.env` file.
 
-- Add your Linux User ID.
+- Ports.
+    > APP_PORT=
+    >
+    > PHP_MYADMIN_PORT=
+
+- Linux User ID.
     > UID=
 
-- Add your Database details.
+- Database details.
     > DB_DATABASE=
     > 
     > DB_USERNAME=
