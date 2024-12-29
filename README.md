@@ -1,6 +1,8 @@
 # Supportify
 PHP/Web Coding Test
 
+# [Supportify UI Screenshot](https://drive.google.com/drive/folders/1GVerwQg8xMTb3UauEZfwXSgt6ZThIAhO)
+
 # How to Set Up the Supportify System
 
 Follow the steps below to set up and run the Supportify system on your local environment.
@@ -126,3 +128,7 @@ There are references I used during the system development.
 - [Stack overflow](https://stackoverflow.com/)
 - [Flowbite - Tailwind CSS component library](https://flowbite.com/docs/getting-started/introduction/)
 - [Alpine.js](https://alpinejs.dev/)
+- [Laracasts: Learn Laravel](https://laracasts.com/)
+
+
+
