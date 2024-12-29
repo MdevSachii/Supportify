@@ -140,6 +140,9 @@ class TicketController extends Controller
                 $q->where('name', 'like', "%{$customer}%");
             });
         }
+        if ($request->has('status_new') && $request->boolean('status_new')) {
+            $query->where('status', TicketStatus::NEW->value);
+        }
 
         $tickets = $query->paginate();
 

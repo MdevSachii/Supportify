@@ -1,25 +1,39 @@
 <x-app-layout>
-    <div class="py-12" x-data="customerTickets()">
+    <div class="sm:py-12" x-data="customerTickets()">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex flex-wrap justify-center gap-2">
-                        <div class="flex items-center w-full sm:max-w-sm">
-                            <label for="simple-search" class="sr-only">Search</label>
-                            <div class="relative w-full">
-                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <i class="fa-solid fa-ticket"></i>
+
+                    <div class="flex flex-col sm:flex-row sm:justify-between items-center gap-4">
+                        <div class="w-[155px]"></div>
+                        <div class="flex flex-wrap justify-center w-full sm:w-auto gap-2">
+                            <div class="flex items-center w-full sm:max-w-sm">
+                                <label for="simple-search" class="sr-only">Search</label>
+                                <div class="relative w-full">
+                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <i class="fa-solid fa-ticket"></i>
+                                    </div>
+                                    <input @keyup.enter="loadTickets()" x-model="customerName" type="text"
+                                        id="simple-search"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                                        placeholder="Search by name..." required />
                                 </div>
-                                <input @keyup.enter="loadTickets()" x-model="customerName" type="text"
-                                    id="simple-search"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
-                                    placeholder="Search by customer name..." required />
+                                <button @click="loadTickets()" type="submit"
+                                    class="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <span class="sr-only">Search</span>
+                                </button>
                             </div>
-                            <button @Click="loadTickets()" type="submit"
-                                class="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <span class="sr-only">Search</span>
-                            </button>
+                        </div>
+                        <div>
+                            <label class="inline-flex items-center me-5 cursor-pointer">
+                                <input x-model="isFilterNewTicket" @change="loadTickets" type="checkbox"
+                                    class="sr-only peer">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600">
+                                </div>
+                                <span class="ms-3 text-sm font-medium text-gray-900">New Tickets</span>
+                            </label>
                         </div>
                     </div>
 
@@ -94,6 +108,7 @@
                     isOpenTicket: false,
                     customerName: '',
                     selectedTicketId: '',
+                    isFilterNewTicket: true,
                     isShowNoTickets: false,
                     allTicketsRoute: "{{ route('ticket.all') }}",
                     changeStatusRoute: "{{ route('ticket.open', ['id' => ':id']) }}",
@@ -130,13 +145,14 @@
                     },
 
                     async loadTickets() {
-                        const response = await fetch(this.allTicketsRoute + `?customer=${this.customerName}`, {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                            }
-                        });
+                        const response = await fetch(this.allTicketsRoute +
+                            `?customer=${this.customerName}&status_new=${this.isFilterNewTicket}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                }
+                            });
 
                         if (!response.ok) {
                             window.toastr.error('Ticket fatcing faild!');
